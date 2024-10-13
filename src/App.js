@@ -1,11 +1,10 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer } from "react";
 import "./App.css";
 import { StartScreen } from "./Components/StartScreen";
 import { SelectScreen } from "./Components/SelectScreen";
 import { LoadingScreen } from "./Components/LoadingScreen";
 import { ReadyScreen } from "./Components/ReadyScreen";
 import { FinishedScreen } from "./Components/FinishedScreen";
-import { Timer } from "./Components/Timer";
 
 const POINTS_PER_QUESTION = 10;
 const TIME_PER_QUESTION = 15; //Seconds
@@ -107,7 +106,7 @@ function App() {
       `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=multiple`
     );
     const data = await res.json();
-    console.log(data);
+
     dispatch({ type: "dataFetched", payload: data.results });
   }
 

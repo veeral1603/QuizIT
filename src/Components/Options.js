@@ -2,8 +2,7 @@ import { decode } from "he";
 import React, { useEffect, useState } from "react";
 
 export const Options = ({ question, dispatch, isAnswered, answer }) => {
-  const { incorrect_answers, correct_answer } = question;
-  const Alloptions = [...incorrect_answers, correct_answer];
+  const { correct_answer } = question;
 
   const [shuffledOptions, setShuffledOptions] = useState([]);
 
@@ -25,7 +24,9 @@ export const Options = ({ question, dispatch, isAnswered, answer }) => {
   }
 
   useEffect(() => {
-    setShuffledOptions(shuffleArray(Alloptions));
+    setShuffledOptions(
+      shuffleArray([...question.incorrect_answers, question.correct_answer])
+    );
   }, [question]);
 
   return (

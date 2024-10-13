@@ -4,13 +4,16 @@ export const Timer = ({ dispatch, timeRemaining }) => {
   const mins = Math.floor(timeRemaining / 60);
   const secs = timeRemaining % 60;
 
-  useEffect(function () {
-    const id = setInterval(function () {
-      dispatch({ type: "tick" });
-    }, 1000);
+  useEffect(
+    function () {
+      const id = setInterval(function () {
+        dispatch({ type: "tick" });
+      }, 1000);
 
-    return () => clearInterval(id);
-  }, []);
+      return () => clearInterval(id);
+    },
+    [dispatch]
+  );
 
   return (
     <div className="timer">
