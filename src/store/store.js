@@ -12,7 +12,7 @@ const store = (set) => ({
   isAnswered: false,
   timeRemaining: null,
   POINTS_PER_QUESTION: 10,
-  TIME_PER_QUESTION: 1,
+  TIME_PER_QUESTION: 15,
 
   setStatus: (newStatus) => set((state) => ({ status: newStatus })), //newStatus is a string
 
