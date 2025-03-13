@@ -1,13 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Select from "react-select";
+import useStore from "../store/store";
+import { useShallow } from "zustand/shallow";
 
-export const SelectScreen = ({
-  dispatch,
-  category,
-  amount,
-  difficulty,
-  fetchData,
-}) => {
+export const SelectScreen = ({ fetchData }) => {
   const categoryOptions = [
     { value: 9, label: "General Knowledge" },
     { value: 10, label: "Books" },
@@ -60,6 +56,14 @@ export const SelectScreen = ({
     { value: 20, label: "20" },
   ];
 
+  const [setStatus, setOptions] = useStore(
+    useShallow((state) => [state.setStatus, state.setOptions])
+  );
+
+  const [difficulty, setDifficulty] = useState(null);
+  const [category, setCategory] = useState(null);
+  const [amount, setAmount] = useState(null);
+
   const styles = {
     menuList: (base) => ({
       ...base,
@@ -81,8 +85,9 @@ export const SelectScreen = ({
   };
 
   function onGenerate() {
-    dispatch({ type: "loadingScreen" });
-    fetchData();
+    setStatus("loading");
+    fetchData(category, difficulty, amount);
+    setOptions(category, difficulty, amount);
   }
 
   return (
@@ -97,23 +102,21 @@ export const SelectScreen = ({
           className="select"
           placeholder="Select Category"
           styles={styles}
-          onChange={(x) => dispatch({ type: "setCategory", payload: x.value })}
+          onChange={(e) => setCategory(e.value)}
         />
         <Select
           options={difficultyOptions}
           className="select"
           placeholder="Select Difficulty"
           styles={styles}
-          onChange={(x) =>
-            dispatch({ type: "setDifficulty", payload: x.value })
-          }
+          onChange={(e) => setDifficulty(e.value)}
         />
         <Select
           options={amountOptions}
           className="select"
           placeholder="Select Amount"
           styles={styles}
-          onChange={(x) => dispatch({ type: "setAmount", payload: x.value })}
+          onChange={(e) => setAmount(e.value)}
         />
       </div>
 

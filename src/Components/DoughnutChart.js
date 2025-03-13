@@ -2,9 +2,23 @@ import React from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
+import { useShallow } from "zustand/shallow";
+import useStore from "../store/store";
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const DoughnutChart = ({ correct, incorrect }) => {
+export const DoughnutChart = () => {
+  const [points, POINTS_PER_QUESTION, questions] = useStore(
+    useShallow((state) => [
+      state.points,
+      state.POINTS_PER_QUESTION,
+      state.questions,
+    ])
+  );
+
+  const correct = points / POINTS_PER_QUESTION;
+  const incorrect = questions.length - correct;
+
   const data = {
     labels: ["Correct Answers", "Incorrect Answers"],
     datasets: [

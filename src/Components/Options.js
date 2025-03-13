@@ -1,7 +1,21 @@
 import { decode } from "he";
 import React, { useEffect, useState } from "react";
+import useStore from "../store/store";
+import { useShallow } from "zustand/shallow";
 
-export const Options = ({ question, dispatch, isAnswered, answer }) => {
+export const Options = () => {
+  const [questions, current, isAnswered, answer] = useStore(
+    useShallow((state) => [
+      state.questions,
+      state.current,
+      state.isAnswered,
+      state.answer,
+    ])
+  );
+  const [setNewAnswer] = useStore(useShallow((state) => [state.setNewAnswer]));
+
+  const question = questions[current];
+
   const { correct_answer } = question;
 
   const [shuffledOptions, setShuffledOptions] = useState([]);
@@ -42,11 +56,10 @@ export const Options = ({ question, dispatch, isAnswered, answer }) => {
           }`}
           key={opt}
           onClick={() =>
-            dispatch({
-              type: "newAnswer",
-              isCorrect: index === shuffledOptions.indexOf(correct_answer),
-              payload: index,
-            })
+            setNewAnswer(
+              index,
+              index === shuffledOptions.indexOf(correct_answer)
+            )
           }
           disabled={isAnswered}
         >

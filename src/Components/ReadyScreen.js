@@ -1,18 +1,27 @@
 import React from "react";
 import { Question } from "./Question";
 import { Timer } from "./Timer";
+import useStore from "../store/store";
+import { useShallow } from "zustand/shallow";
 
-export const ReadyScreen = ({
-  question,
-  length,
-  points,
-  current,
-  isAnswered,
-  dispatch,
-  POINTS_PER_QUESTION,
-  answer,
-  timeRemaining,
-}) => {
+export const ReadyScreen = () => {
+  const [questions, current, points, isAnswered, POINTS_PER_QUESTION] =
+    useStore(
+      useShallow((state) => [
+        state.questions,
+        state.current,
+        state.points,
+        state.isAnswered,
+        state.POINTS_PER_QUESTION,
+      ])
+    );
+
+  const [setStatus, nextQuestion] = useStore(
+    useShallow((state) => [state.setStatus, state.nextQuestion])
+  );
+
+  const length = questions.length;
+
   return (
     <div className="ready-screen">
       <header>
@@ -40,27 +49,19 @@ export const ReadyScreen = ({
         <progress value={current + 1} max={length}></progress>
       </div>
 
-      <Question
-        question={question}
-        dispatch={dispatch}
-        isAnswered={isAnswered}
-        answer={answer}
-      />
+      <Question />
 
       <div className="next-btn-container">
-        <Timer dispatch={dispatch} timeRemaining={timeRemaining} />
+        <Timer />
         {isAnswered ? (
           current < length - 1 ? (
-            <button
-              className="btn next-btn"
-              onClick={() => dispatch({ type: "nextQuestion" })}
-            >
+            <button className="btn next-btn" onClick={() => nextQuestion()}>
               Next
             </button>
           ) : (
             <button
               className="btn next-btn"
-              onClick={() => dispatch({ type: "finishQuiz" })}
+              onClick={() => setStatus("finished")}
             >
               Finish
             </button>
